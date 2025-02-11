@@ -121,7 +121,7 @@ kubectl get pods -n kube-system
 ```
 
 
-## Chellenges. 
+## Challenges. 
 - Creating pods: Images may not successfully be pulled!
 ```bash
 echo -e "nameserver 8.8.8.8\nnameserver 1.1.1.1" | sudo tee /etc/resolv.conf
