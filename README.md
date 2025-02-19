@@ -85,14 +85,15 @@ sudo systemctl enable containerd
 ```
 
 ## On Master 
-8. Initialize the Kubernetes Control Plane (On Master Node Only)
+8. Initialize the Kubernetes Control Plane (On Master Node Only). On this, you need to have decided the network plugin to be used. We will use Flannel network plugin.
 - Run the following on your master node:
 ```bash
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
 ```
 - This may come with errors: Your system may not meet all the requirements, and as such, you might need to skip those checks: Incase the above throws check errors, run the following:
 ```bash
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=SystemVerification
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=SystemVerification
 ```
 Note: the choice of the IP range given:
 -- Calico: Requires a pod CIDR (e.g., 192.168.0.0/16).
@@ -109,16 +110,37 @@ Note: SHould you face a challenge joining the nodes, due to system pre-checks, u
 sudo kubeadm join 192.168.100.31:6443 --token z63awy.4k2itinl3o6nrud7 --discovery-token-ca-cert-hash sha256:b1f0de577aed4d34d516e0023f7427e4ad9a959c3b0a3b4101b97031b6178e7d --ignore-preflight-errors=SystemVerification
 ```
 
-9. Install a Network Plugin (CNI)
-- You need a CNI plugin for pod communication. Install Calico
+Incase you miss out on the join command, run the following on master node to generate kubeadm join command:
 ```bash
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubeadm token create --print-join-command
+```
+
+9. Install a Network Plugin (CNI)
+- You need a CNI plugin for pod communication. Based on the IP range used to initialize the cluster, you should install a plugin that aligns with that IP range.
+```bash
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 - Allow sometime for the network plugin to install the necessary pods/resources
 Monitor:
 ```bash
 kubectl get pods -n kube-system
 ```
+
+
+
+10. Create a simple deployment.
+- Create a simple deployment and expose it to the internet.
+```bash
+kubectl create deployment dtechnologies --image=dannywangari/dtechnologies:2.0.1 --replicas=2
+
+kubectl expose deployment dtechnologies --type=NodePort --port=80 --target-port=8000
+
+kubectl get services   #get the port:: 
+
+#use the workernode IP to access your application
+http://<EC2-PUBLIC-IP>:31567
+```
+
 
 
 ## Challenges. 
