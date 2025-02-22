@@ -1,10 +1,15 @@
 Setting up a cluster using kubeadm
 - CheckList
 -- A compatible Linux host. 
+
 -- 2 GB or more of RAM per machine (any less will leave little room for your apps).
+
 -- 2 CPUs or more for control plane machines.
+
 -- Full network connectivity between all machines in the cluster (public or private network is fine).
+
 -- Unique hostname, MAC address, and product_uuid for every node. See here for more details.
+
 -- Certain ports are open on your machines. [See here for more details](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
 
 Step1: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
