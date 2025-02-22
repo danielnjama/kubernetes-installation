@@ -5,7 +5,13 @@ Step1: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ins
 
 Run the following commands on all nodes (Master node and Worker nodes)
 
-1. Update the apt package index and install packages needed to use the Kubernetes apt repository:
+1. Set hostname and Update the apt package index and install packages needed to use the Kubernetes apt repository:
+```bash
+sudo hostnamectl set-hostname <host-name>
+
+sudo reboot
+```
+
 ```bash
 sudo apt-get update
 # apt-transport-https may be a dummy package; if so, you can skip that package
@@ -169,11 +175,11 @@ sudo sed -i '/ swap / s/^/#/' /etc/fstab  # Persist after reboot
 
 - Enable autocompletion
 ```bash
-source <(kubectl completion bash) # configuração de autocomplete no bash do shell atual, o pacote bash-completion precisa ter sido instalado primeiro.
-echo "source <(kubectl completion bash)" >> ~/.bashrc # para adicionar o autocomplete permanentemente no seu shell bash.
-
-alias k=kubectl
-complete -o default -F __start_kubectl k
+source <(kubectl completion bash) 
+echo "source <(kubectl completion bash)" >> ~/.bashrc 
+echo "alias k=kubectl" >> ~/.bashrc
+echo "complete -o default -F __start_kubectl k" >> ~/.bashrc
+source  ~/.bashrc
 ```
 
 - Unable to ssh to worker nodes from master nodes
